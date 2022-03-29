@@ -26,7 +26,7 @@ var statusWebCmd = &cobra.Command{
 	Long:  `This command can be used to status of web deployment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x status web' placeholder command")
+		fmt.Println("Executing 'kuula status web' placeholder command")
 
 	},
 }
@@ -37,7 +37,7 @@ var statusAPICmd = &cobra.Command{
 	Long:  `This command can be used to status of API deployment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x status api' placeholder command")
+		fmt.Println("Executing 'kuula status api' placeholder command")
 	},
 }
 
@@ -47,6 +47,6 @@ var statusDatabaseCmd = &cobra.Command{
 	Long:  `This command can be used to status of database deployment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x status database' placeholder command")
+		fmt.Println("Executing 'kuula status database' placeholder command")
 	},
 }

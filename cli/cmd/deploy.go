@@ -14,11 +14,9 @@ func init() {
 	rootCmd.AddCommand(deployCmd)
 
 	deployCmd.AddCommand(deployInferenceCmd)
-	deployCmd.AddCommand(deployAPICmd)
-	deployCmd.AddCommand(deployDatabaseCmd)
 	deployCmd.PersistentFlags().StringP("file", "f", "", "deploy from file")
 	deployCmd.PersistentFlags().StringP("web", "w", "", "deploy from web url")
-	deployCmd.PersistentFlags().StringP("project", "p", "", "deploy from x project")
+	deployCmd.PersistentFlags().StringP("project", "p", "", "deploy from kuula project")
 
 }
 
@@ -56,6 +54,7 @@ var deployInferenceCmd = &cobra.Command{
 		fileSource, _ := cmd.Flags().GetString("file")
 		webSource, _ := cmd.Flags().GetString("web")
 		projectSource, _ := cmd.Flags().GetString("project")
+		// deploymentConfig := getTomlConf()
 
 		if fileSource != "" {
 			f, err = os.ReadFile(fileSource)
@@ -66,31 +65,11 @@ var deployInferenceCmd = &cobra.Command{
 		} else if projectSource != "" {
 			fmt.Println("get source address from user project", projectSource)
 		}
-		fmt.Println("Executing 'x deploy inference' placeholder command")
+		fmt.Println("Executing 'kuula deploy inference' placeholder command")
 
 		// dispatch f to server
 		if f != nil {
 			sendRequest(f)
 		}
-	},
-}
-
-var deployAPICmd = &cobra.Command{
-	Use:   "api",
-	Short: "Deploy API artifacts",
-	Long:  `This command can be used to deploy API artifacts`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x' deploy api' placeholder command")
-	},
-}
-
-var deployDatabaseCmd = &cobra.Command{
-	Use:   "database",
-	Short: "Deploy database artifacts",
-	Long:  `This command can be used to deploy database artifacts`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x deploy database' placeholder command")
 	},
 }

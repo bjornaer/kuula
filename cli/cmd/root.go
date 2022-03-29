@@ -14,9 +14,9 @@ var (
 	cfgFile string
 
 	rootCmd = &cobra.Command{
-		Use:   "x",
-		Short: "x: A sample CLI application",
-		Long:  `x: A sample CLI application written in Go as an entry point for the imaginary deployment automation tool`,
+		Use:   "kuula",
+		Short: "kuula: A sample CLI application",
+		Long:  `kuula: A sample CLI application written in Go as an entry point for the imaginary deployment automation tool`,
 	}
 )
 
@@ -27,7 +27,7 @@ func Execute() error {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.x.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kuula.yaml)")
 
 }
 
@@ -48,6 +48,8 @@ func homeDir() (string, error) {
 	return user.HomeDir, nil
 }
 
+/// this should contain values to connect to our service,
+// like token or svc account or whatever
 func initConfig() {
 
 	if cfgFile != "" {
@@ -59,7 +61,7 @@ func initConfig() {
 		handleError(err)
 
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".x")
+		viper.SetConfigName(".kuula")
 	}
 
 	viper.AutomaticEnv()

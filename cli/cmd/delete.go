@@ -28,7 +28,7 @@ var deleteWebCmd = &cobra.Command{
 	Long:  `This command can be used to delete web artifacts`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x delete web' placeholder command")
+		fmt.Println("Executing 'kuula delete web' placeholder command")
 	},
 }
 
@@ -38,7 +38,7 @@ var deleteAPICmd = &cobra.Command{
 	Long:  `This command can be used to delete API artifacts`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x delete api' placeholder command")
+		fmt.Println("Executing 'kuula delete api' placeholder command")
 	},
 }
 
@@ -48,6 +48,6 @@ var deleteDatabaseCmd = &cobra.Command{
 	Long:  `This command can be used to delete database artifacts`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		fmt.Println("Executing 'x delete database' placeholder command")
+		fmt.Println("Executing 'kuula delete database' placeholder command")
 	},
 }

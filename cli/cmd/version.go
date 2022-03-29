@@ -12,9 +12,9 @@ func init() {
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print version number of x tool",
-	Long:  `This command can be used get the version number of x tool`,
+	Short: "Print version number of kuula tool",
+	Long:  `This command can be used get the version number of kuula tool`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("x v0.0.1-alpha")
+		fmt.Println("kuula v0.0.1-alpha")
 	},
 }
