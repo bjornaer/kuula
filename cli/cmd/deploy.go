@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -23,6 +24,7 @@ func init() {
 }
 
 type DeployPayload struct {
+	Username          string
 	MLCode            []byte
 	Requirements      []byte
 	DependencyHandler string
@@ -33,7 +35,7 @@ type DeployPayload struct {
 
 func sendRequest(payload *DeployPayload) {
 	jsonPayload, err := json.Marshal(payload)
-	req, err := http.NewRequest("POST", "http://localhost:8090/decode", bytes.NewBuffer(jsonPayload))
+	req, err := http.NewRequest("POST", "http://localhost:8080/decode", bytes.NewBuffer(jsonPayload))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -63,7 +65,10 @@ func setPayload(config *tomlConfig) (*DeployPayload, error) {
 	if err != nil {
 		return nil, err
 	}
+	username := viper.GetString("username")
+
 	return &DeployPayload{
+		Username:          username,
 		MLCode:            f,
 		Requirements:      reqs,
 		Server:            config.Server.Enabled,

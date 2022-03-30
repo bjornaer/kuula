@@ -1,34 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"io"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func dcd(w http.ResponseWriter, req *http.Request) {
-	bod, err := io.ReadAll(req.Body)
-	if err != nil {
-		fmt.Fprintf(w, "error\n")
-	}
-	fmt.Println(string(bod))
-
-	fmt.Fprintf(w, "done.\n")
-}
-
-func headers(w http.ResponseWriter, req *http.Request) {
-
-	for name, headers := range req.Header {
-		for _, h := range headers {
-			fmt.Fprintf(w, "%v: %v\n", name, h)
-		}
-	}
-}
-
 func main() {
-
-	http.HandleFunc("/decode", dcd)
-	http.HandleFunc("/headers", headers)
-
-	http.ListenAndServe(":8090", nil)
+	r := gin.Default()
+	r.POST("/decode", func(c *gin.Context) {
+		username := c.PostForm("username")
+		c.JSON(http.StatusCreated, gin.H{
+			"model_id": username + "1234",
+			"message":  "model deployed succesfully",
+		})
+	})
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
