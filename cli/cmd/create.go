@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -15,7 +15,10 @@ model_path = "./model.py"
 requirements_path = "./requirements.txt"
 
 [run]
-enable = false`
+enable = false
+model_path = "./model.py"
+requirements_path = "./requirements.txt"
+data_source = "kuula.ai/prj-id/data-bucket"`
 
 func init() {
 	rootCmd.AddCommand(createCmd)
@@ -26,19 +29,21 @@ func init() {
 
 }
 
-func createProjectConfig(path string) {
+func createProjectConfig(path string) error {
 	// If the file doesn't exist, create it, or append to the file
-	f, err := os.OpenFile(path+".toml", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	defer f.Close()
+
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	_, err = f.Write([]byte(tomlInit))
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	f.Close()
+	return nil
 }
 
 var createCmd = &cobra.Command{
@@ -47,10 +52,14 @@ var createCmd = &cobra.Command{
 	Long:  `This command can be used to create a basic boilerplate config file for a deployment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		wd, _ := os.Getwd()
-		if args[0] != "" {
+		if len(args) != 0 && args[0] != "" {
 			wd = filepath.Join(wd, args[0])
 		}
 		err := os.Chdir(filepath.Join(wd))
 		handleError(err)
+		err = createProjectConfig(filepath.Join(wd, "config.toml"))
+		handleError(err)
+		fmt.Println("Config file created at", wd)
+
 	},
 }
