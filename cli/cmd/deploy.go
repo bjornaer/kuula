@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -13,15 +15,25 @@ import (
 func init() {
 	rootCmd.AddCommand(deployCmd)
 
-	deployCmd.AddCommand(deployInferenceCmd)
+	// deployCmd.AddCommand(deployInferenceCmd)
 	deployCmd.PersistentFlags().StringP("file", "f", "", "deploy from file")
 	deployCmd.PersistentFlags().StringP("web", "w", "", "deploy from web url")
 	deployCmd.PersistentFlags().StringP("project", "p", "", "deploy from kuula project")
 
 }
 
-func sendRequest(bod []byte) {
-	req, err := http.NewRequest("POST", "http://localhost:8090/decode", bytes.NewBuffer(bod))
+type DeployPayload struct {
+	MLCode            []byte
+	Requirements      []byte
+	DependencyHandler string
+	Server            bool
+	Run               bool
+	DataSource        string
+}
+
+func sendRequest(payload *DeployPayload) {
+	jsonPayload, err := json.Marshal(payload)
+	req, err := http.NewRequest("POST", "http://localhost:8090/decode", bytes.NewBuffer(jsonPayload))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -33,43 +45,74 @@ func sendRequest(bod []byte) {
 	}
 
 	defer resp.Body.Close()
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+}
+
+func setPayload(config *tomlConfig) (*DeployPayload, error) {
+	var f []byte
+	var reqs []byte
+	var err error
+	f, err = os.ReadFile(config.ModelPath)
+	if err != nil {
+		return nil, err
+	}
+	reqs, err = os.ReadFile(config.RequirementsPath)
+	if err != nil {
+		return nil, err
+	}
+	return &DeployPayload{
+		MLCode:            f,
+		Requirements:      reqs,
+		Server:            config.Server.Enabled,
+		Run:               config.Run.Enabled,
+		DependencyHandler: config.DependencyHandler,
+		DataSource:        config.Run.DataSource,
+	}, nil
+
 }
 
 var deployCmd = &cobra.Command{
 	Use:     "deploy",
 	Aliases: []string{"dep", "depl"},
-	Short:   "Deploy artifacts (web, api or database)",
-	Long:    `This command can be used together with web, api or database sub-commands to deploy respective artifacts`,
-}
-
-var deployInferenceCmd = &cobra.Command{
-	Use:     "inference",
-	Aliases: []string{"inf", "I"},
-	Short:   "Deploy inference model artifacts",
-	Long:    `This command can be used to deploy trained models for inference`,
+	Short:   "Deploy ML models to your Kuula project",
+	Long:    `This command can be used to deploy your ML model to your Kuula Project based on your configuration file`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		var f []byte
+		var config *tomlConfig
 		var err error
-		fileSource, _ := cmd.Flags().GetString("file")
-		webSource, _ := cmd.Flags().GetString("web")
+		configFileSource, _ := cmd.Flags().GetString("file")
+		configWebSource, _ := cmd.Flags().GetString("web")
 		projectSource, _ := cmd.Flags().GetString("project")
 		// deploymentConfig := getTomlConf()
 
-		if fileSource != "" {
-			f, err = os.ReadFile(fileSource)
+		if configFileSource != "" {
+			config, err = readTomlConfig(configFileSource)
 			handleError(err)
-		} else if webSource != "" {
-			fmt.Println("get source address from the web", webSource)
+		} else if configWebSource != "" {
+			// config, err = readConfigFromTheWeb(configWebSource)
+			// handleError(err)
+			fmt.Println("get source address from the web", configWebSource)
 
 		} else if projectSource != "" {
+			// Here there is already a model somewhere in a user owned project, they want to move it
 			fmt.Println("get source address from user project", projectSource)
 		}
-		fmt.Println("Executing 'kuula deploy inference' placeholder command")
+		payload, err := setPayload(config)
+		handleError(err)
 
 		// dispatch f to server
-		if f != nil {
-			sendRequest(f)
+		if payload != nil {
+			sendRequest(payload)
 		}
 	},
 }
+
+// var deployInferenceCmd = &cobra.Command{
+// 	Use:     "inference",
+// 	Aliases: []string{"inf", "I"},
+// 	Short:   "Deploy inference model artifacts",
+// 	Long:    `This command can be used to deploy trained models for inference`,
+// }

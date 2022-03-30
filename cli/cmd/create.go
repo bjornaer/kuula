@@ -9,16 +9,17 @@ import (
 )
 
 var tomlInit = `title = "config"
+
+dependency_handler = "pip"
+model_path = "./ml_project/model.py"
+requirements_path = "./ml_project/requirements.txt"
+
 [server]
-enable = true
-model_path = "./model.py"
-requirements_path = "./requirements.txt"
+enabled = true
 
 [run]
-enable = false
-model_path = "./model.py"
-requirements_path = "./requirements.txt"
-data_source = "kuula.ai/prj-id/data-bucket"`
+enabled = false
+data_source = "https://kuula.ai/prj-id/data-bucket"`
 
 func init() {
 	rootCmd.AddCommand(createCmd)
