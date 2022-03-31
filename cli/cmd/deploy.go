@@ -53,7 +53,7 @@ func sendRequest(payload *DeployPayload) {
 	fmt.Println("response Body:", string(body))
 }
 
-func setPayload(config *tomlConfig) (*DeployPayload, error) {
+func setPayload(config *yamlConfig) (*DeployPayload, error) {
 	var f []byte
 	var reqs []byte
 	var err error
@@ -86,7 +86,7 @@ var deployCmd = &cobra.Command{
 	Long:    `This command can be used to deploy your ML model to your Kuula Project based on your configuration file`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// *** add code to invoke automation end points below ***
-		var config *tomlConfig
+		var config *yamlConfig
 		var err error
 		configFileSource, _ := cmd.Flags().GetString("file")
 		configWebSource, _ := cmd.Flags().GetString("web")
@@ -94,7 +94,7 @@ var deployCmd = &cobra.Command{
 		// deploymentConfig := getTomlConf()
 
 		if configFileSource != "" {
-			config, err = readTomlConfig(configFileSource)
+			config, err = readYamlConfig(configFileSource)
 			handleError(err)
 		} else if configWebSource != "" {
 			// config, err = readConfigFromTheWeb(configWebSource)

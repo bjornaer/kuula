@@ -8,18 +8,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var tomlInit = `title = "config"
+var tomlInit = `title: config
 
-dependency_handler = "pip"
-model_path = "./ml_project/model.py"
-requirements_path = "./ml_project/requirements.txt"
+dependency-handler: pip
+model-path: ./ml_project/model.py
+requirements-path: ./ml_project/requirements.txt
 
-[server]
-enabled = true
+server:
+  enabled: true
 
-[run]
-enabled = false
-data_source = "https://kuula.ai/prj-id/data-bucket"`
+run:
+  enabled: false
+  data-source: https://kuula.ai/prj-id/data-bucket`
 
 func init() {
 	rootCmd.AddCommand(createCmd)
@@ -58,7 +58,7 @@ var createCmd = &cobra.Command{
 		}
 		err := os.Chdir(filepath.Join(wd))
 		handleError(err)
-		err = createProjectConfig(filepath.Join(wd, "config.toml"))
+		err = createProjectConfig(filepath.Join(wd, "config.yaml"))
 		handleError(err)
 		fmt.Println("Config file created at", wd)
 
