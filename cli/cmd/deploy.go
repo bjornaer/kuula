@@ -58,6 +58,7 @@ func setPayload(config *yamlConfig) (*DeployPayload, error) {
 	var f []byte
 	var reqs []byte
 	var err error
+	fmt.Println(filepath.Join(config.ModelPath))
 	f, err = os.ReadFile(filepath.Join(config.ModelPath))
 	if err != nil {
 		fmt.Println("error reading model file")

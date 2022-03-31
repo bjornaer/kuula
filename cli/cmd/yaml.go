@@ -18,16 +18,16 @@ type Run struct {
 }
 
 type yamlConfig struct {
-	Title             string
-	DependencyHandler string
-	ModelPath         string
-	RequirementsPath  string
+	Title             string `yaml:"title"`
+	DependencyHandler string `yaml:"dependency-handler"`
+	ModelPath         string `yaml:"model-path"`
+	RequirementsPath  string `yaml:"requirements-path"`
 	Server            Server `yaml:"server"`
 	Run               Run    `yaml:"run"`
 }
 
 func readYamlConfig(path string) (*yamlConfig, error) {
-	var c yamlConfig
+	var c *yamlConfig
 	// _, b, _, _ := runtime.Caller(0)
 	// basepath := filepath.Dir(b)
 	// place := filepath.Join(basepath, path)
@@ -42,6 +42,5 @@ func readYamlConfig(path string) (*yamlConfig, error) {
 		fmt.Println("Unmarshal error:")
 		return nil, err
 	}
-
-	return &c, nil
+	return c, nil
 }
