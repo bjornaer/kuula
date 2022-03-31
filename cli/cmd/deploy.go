@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -57,12 +58,14 @@ func setPayload(config *yamlConfig) (*DeployPayload, error) {
 	var f []byte
 	var reqs []byte
 	var err error
-	f, err = os.ReadFile(config.ModelPath)
+	f, err = os.ReadFile(filepath.Join(config.ModelPath))
 	if err != nil {
+		fmt.Println("error reading model file")
 		return nil, err
 	}
-	reqs, err = os.ReadFile(config.RequirementsPath)
+	reqs, err = os.ReadFile(filepath.Join(config.RequirementsPath))
 	if err != nil {
+		fmt.Println("error reading requirements file")
 		return nil, err
 	}
 	username := viper.GetString("username")
