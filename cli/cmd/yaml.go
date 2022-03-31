@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
+	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
@@ -25,15 +27,21 @@ type yamlConfig struct {
 }
 
 func readYamlConfig(path string) (*yamlConfig, error) {
-	var c *yamlConfig
-	yamlFile, err := ioutil.ReadFile(path)
+	var c yamlConfig
+	// _, b, _, _ := runtime.Caller(0)
+	// basepath := filepath.Dir(b)
+	// place := filepath.Join(basepath, path)
+	// fmt.Println(place)
+	yamlFile, err := ioutil.ReadFile(filepath.Join(path))
 	if err != nil {
+		fmt.Println("read error:")
 		return nil, err
 	}
-	err = yaml.Unmarshal(yamlFile, c)
+	err = yaml.Unmarshal(yamlFile, &c)
 	if err != nil {
+		fmt.Println("Unmarshal error:")
 		return nil, err
 	}
 
-	return c, nil
+	return &c, nil
 }
