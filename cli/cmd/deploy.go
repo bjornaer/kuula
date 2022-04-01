@@ -26,6 +26,7 @@ func init() {
 
 type DeployPayload struct {
 	Username          string
+	Project           string
 	MLCode            []byte
 	Requirements      []byte
 	DependencyHandler string
@@ -70,9 +71,11 @@ func setPayload(config *yamlConfig) (*DeployPayload, error) {
 		return nil, err
 	}
 	username := viper.GetString("username")
+	project := viper.GetString("project")
 
 	return &DeployPayload{
 		Username:          username,
+		Project:           project,
 		MLCode:            f,
 		Requirements:      reqs,
 		Server:            config.Server.Enabled,

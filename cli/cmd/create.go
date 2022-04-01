@@ -8,12 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var tomlInit = `title: config
+var yamlInit = `title: my-model
 
+version: 0.1.0
 dependency-handler: pip
 model-path: ./ml_project/model.py
 requirements-path: ./ml_project/requirements.txt
 
+# perhaps no need for server and run configs,
+#they get triggered form their respective commands
 server:
   enabled: true
 
@@ -39,7 +42,7 @@ func createProjectConfig(path string) error {
 		return err
 	}
 
-	_, err = f.Write([]byte(tomlInit))
+	_, err = f.Write([]byte(yamlInit))
 	if err != nil {
 		return err
 	}
