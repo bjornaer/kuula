@@ -34,3 +34,20 @@ RUN pip install --no-cache-dir -e ./pytorchserver
 RUN useradd kserve -m -u 1000 -d /home/kserve
 USER 1000
 ENTRYPOINT ["python", "-m", "pytorchserver"]
+
+#######
+
+FROM python:3.10-slim
+
+WORKDIR /workspace
+RUN chmod -R a+w /workspace
+
+RUN pip install poetry==1.1.12
+
+COPY pyproject.toml poetry.lock ./
+
+COPY src ./src
+
+RUN poetry install --no-interaction --no-ansi
+
+CMD ["poetry", "run", "./docker/start.sh"]

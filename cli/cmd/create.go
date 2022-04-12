@@ -11,18 +11,11 @@ import (
 var yamlInit = `title: my-model
 
 version: 0.1.0
-dependency-handler: pip
+dependency-handler: pip # poetry as an alternative
 model-path: ./ml_project/model.py
 requirements-path: ./ml_project/requirements.txt
-
-# perhaps no need for server and run configs,
-#they get triggered form their respective commands
-server:
-  enabled: true
-
-run:
-  enabled: false
-  data-source: https://kuula.ai/prj-id/data-bucket`
+input-type: string # one of [string, int, image, video, audio, JSON]
+`
 
 func init() {
 	rootCmd.AddCommand(createCmd)
